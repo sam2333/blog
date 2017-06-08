@@ -1,0 +1,126 @@
+# Golang CircleCI 2.0 configuration file
+# https://circleci.com/docs/2.0/configuration-reference/
+#
+# Check https://circleci.com/docs/2.0/language-go/ for more details
+version: 2.1
+jobs:
+  deploy_blog:
+    docker:
+      # specify the version
+      # TODO, build hugo image
+      - image: circleci/golang:1.16
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    #### TEMPLATE_NOTE: go expects specific checkout path representing url
+    #### expecting it in the form of
+    ####   /go/src/github.com/circleci/go-tool
+    ####   /go/src/bitbucket.org/circleci/go-tool
+    working_directory: ~/blog/
+
+    steps:
+      - checkout
+
+      # To build Docker images for deployment
+      # Docker Layer Caching is not available on your plan
+      #- setup_remote_docker:
+      #    docker_layer_caching: true
+
+      # specify any bash command here prefixed with `run: `
+      - run:
+          name: Set up hugo environemt
+          command: |
+            mkdir /tmp/hugo
+
+            # download resource and extract
+            HUGO_RELEASES=hugo_${HUGO_VERSION}_Linux-64bit.tar.gz
+            wget https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${HUGO_RELEASES} -O /tmp/${HUGO_RELEASES}
+            tar -zxf /tmp/${HUGO_RELEASES} -C /tmp/hugo/
+
+            # export environment
+            export HUGO_HOME=/tmp/hugo/
+            export PATH=$PATH:$HUGO_HOME
+
+            # check
+            hugo version
+
+      - run:
+          name: Prepare theme submodule
+          command: |
+            rm -rf themes/*
+            git clone https://${GITHUB_TOKEN}@${GITHUB_THEME_SUBMODULE} themes/even
+
+            # for .circleci job of `gh-pages` branch
+            cp -r .circleci themes/even/static/
+
+      - run:
+          name: Publish to blog gh-pages
+          command: |
+            # no need actually
+            if [ "$CIRCLE_BRANCH" = "master" ]; then
+              chmod u+x ./.circleci/deploy_blog.sh
+              sh ./.circleci/deploy_blog.sh
+            else
+              echo 'Not master branch, skip deploy'
+            fi
+
+
+  pure_blog_cf_cache:
+
+    # https://circleci.com/docs/2.0/executor-types/#using-machine
+    machine:
+      image: ubuntu-1604:201903-01    # pins image to specific version
+
+    working_directory: ~/blog/
+
+    steps:
+      - run:
+          name: Purge cloudflare cache
+          command: |
+            curl -X POST "https://api.cloudflare.com/client/v4/zones/${CF_ZONE_IDENTIFIER}/purge_cache" \
+                 -H "Authorization: Bearer ${CF_PURGE_CACHE_API_TOKEN}" \
+                 -H "Content-Type: application/json" \
+                 --data '{"purge_everything":true}'
+            echo 'purge everything succeed'
+
+  deploy_homepage:
+    docker:
+      # specify the version
+      # TODO, build hugo image
+      - image: circleci/golang:1.9
+
+    working_directory: ~/homepage/
+
+    steps:
+      - checkout
+
+      - run:
+          name: Prepare environemt
+          command: |
+            echo 'TODO prepare environment...'
+
+      - run:
+          name: Publish homepage gh-pages
+          command: |
+            echo 'TODO deploy homepage gh-pages...'
+
+workflows:
+  version: 2
+  deploy_gh_pages_pipeline:
+    jobs:
+      - deploy_blog:
+          context: gh-pages-deploy
+          filters:
+            branches:
+              only:
+                - master
+
+      - pure_blog_cf_cache:
+          context: gh-pages-deploy
+          filters:
+            branches:
+              only:
+                - gh-pages
