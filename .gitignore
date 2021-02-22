@@ -1,0 +1,27 @@
+# --------------------
+# Default
+# --------------------
+#.gitkeep
+.DS_Store
+Thumbs.db
+
+# --------------------
+# IntelliJ Files
+# --------------------
+*.iml
+.idea/
+
+# --------------------
+# vim Files
+# --------------------
+*.swp
+
+# --------------------
+# Others
+# --------------------
+yarn.lock
+node_modules/
+package-lock.json
+public/*
+resources/
+themes/even
