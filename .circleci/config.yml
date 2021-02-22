@@ -51,10 +51,10 @@ jobs:
           name: Prepare theme submodule
           command: |
             rm -rf themes/*
-            git clone https://${GITHUB_TOKEN}@${GITHUB_THEME_SUBMODULE} themes/diaspora
+            git clone https://${GITHUB_TOKEN}@${GITHUB_THEME_SUBMODULE} themes/even
 
             # for .circleci job of `gh-pages` branch
-            cp -r .circleci themes/diaspora/static/
+            cp -r .circleci themes/even/static/
 
       - run:
           name: Publish to blog gh-pages
