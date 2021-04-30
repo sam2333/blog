@@ -6,6 +6,7 @@ tags:
   - "Linux"
 categories:
   - "HowTo"
+summary: "A job is a process that the shell manages. Each job is assigned a sequential job ID. Because a job is a process, each job has an associated PID."
 ---
 
 # What's a job in Linux
