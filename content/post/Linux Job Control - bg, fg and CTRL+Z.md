@@ -35,37 +35,42 @@ Job control commands enable you to place jobs in the foreground or background, a
 # A Practical Example
 
 -  Executing a background job
-```
-> ping www.samsuse.com >/dev/null &
-#[1] 4687
-```
+
+    ```
+    > ping www.samsuse.com >/dev/null &
+    [1] 4687
+    ```
 
 - View all the background jobs
-```
-> jobs
-[1]  + running    ping www.samsuse.com > /dev/null
-```
+
+    ```
+    > jobs
+    [1]  + running    ping www.samsuse.com > /dev/null
+    ```
 
 - Taking a job from the background to the foreground `fg %job_number`
-```
-> fg %1
-[1]  + running    ping www.samsuse.com > /dev/null
-# ctrl+z
-> jobs
-[1]  + suspended  ping www.samsuse.com > /dev/null
-```
+
+    ```
+    > fg %1
+    [1]  + running    ping www.samsuse.com > /dev/null
+    # ctrl+z
+    > jobs
+    [1]  + suspended  ping www.samsuse.com > /dev/null
+    ```
 
 - Continue running a suspended job in the background `bg %job_number`
-```
-> bg %1
-[1]  + continued  ping www.samsuse.com > /dev/null
-```
+
+    ```
+    > bg %1
+    [1]  + continued  ping www.samsuse.com > /dev/null
+    ```
 
 - Kill a running job using `kill %job_number`
-```
-> kill %1
-[1]  + terminated  ping www.samsuse.com > /dev/null
-```
+
+    ```
+    > kill %1
+    [1]  + terminated  ping www.samsuse.com > /dev/null
+    ```
 
 ![Linux Job Control - bg, fg and CTRL+Z](/images/linux-jobs.png)
 
