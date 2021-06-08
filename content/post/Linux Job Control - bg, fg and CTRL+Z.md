@@ -1,7 +1,7 @@
 ---
 title: "Linux Job Control - bg, fg and CTRL+Z"
 date: 2015-04-19T15:13:25+08:00
-draft: false
+draft: true
 tags:
   - "Linux"
 categories:

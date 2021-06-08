@@ -7,7 +7,7 @@ tags:
   - "Tag2"
 categories:
   - "HowTo"
-summary: "{{ title }}"
+summary:
 ---
 
 

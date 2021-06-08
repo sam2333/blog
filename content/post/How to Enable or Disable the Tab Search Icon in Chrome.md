@@ -1,7 +1,7 @@
 ---
 title: "How to Enable or Disable the Tab Search Icon in Chrome"
 date: 2021-04-27T20:49:35+08:00
-draft: false
+draft: true
 tags:
   - "Chrome"
   - "Browser"
